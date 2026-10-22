@@ -1,0 +1,2631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Milemark | Grab The Keys. Skip The Counter.</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&family=Syne:wght@800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #121519;
+      --bg-card: #181d23;
+      --bg-card-hover: #1e242c;
+      --bg-input: #13171c;
+      --amber: #e59d3b;
+      --amber-hover: #d98f29;
+      --amber-subtle: rgba(229, 157, 59, 0.12);
+      --border-color: #27313c;
+      --border-subtle: #1e2630;
+      --text-white: #ffffff;
+      --text-muted: #8d9aa7;
+      --text-dim: #606d7d;
+      --green: #10b981;
+      --red: #ef4444;
+      --radius: 8px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image:
+        radial-gradient(circle at 65% 25%, rgba(229, 157, 59, 0.10) 0%, rgba(18, 21, 25, 0) 55%),
+        radial-gradient(circle at 15% 80%, rgba(255, 255, 255, 0.02) 0%, rgba(18, 21, 25, 0) 40%);
+      color: var(--text-white);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    .mono {
+      font-family: 'Space Mono', monospace;
+    }
+
+    .navbar {
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text-white);
+    }
+
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      border: 2.5px solid var(--amber);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-icon-inner {
+      width: 12px;
+      height: 10px;
+      background-color: var(--amber);
+      border-radius: 2px;
+    }
+
+    .logo-text {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      gap: 34px;
+    }
+
+    .nav-link {
+      color: var(--text-white);
+      text-decoration: none;
+      font-size: 0.92rem;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .btn-book-now {
+      background-color: var(--amber);
+      color: #121519;
+      font-weight: 600;
+      font-size: 0.92rem;
+      padding: 10px 22px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .hero-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 20px 32px 60px;
+      display: grid;
+      grid-template-columns: 1.15fr 0.95fr;
+      gap: 50px;
+      align-items: flex-start;
+    }
+
+    .hero-left {
+      padding-top: 15px;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--amber);
+      font-size: 0.76rem;
+      letter-spacing: 1.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 22px;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      background-color: var(--amber);
+      border-radius: 50%;
+    }
+
+    .hero-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 900;
+      font-size: clamp(3.2rem, 5.2vw, 4.75rem);
+      line-height: 0.95;
+      text-transform: uppercase;
+      color: var(--text-white);
+      margin-bottom: 24px;
+    }
+
+    .hero-title .highlight {
+      color: var(--amber);
+    }
+
+    .hero-desc {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      line-height: 1.6;
+      max-width: 490px;
+      margin-bottom: 34px;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 56px;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 13px 26px;
+      border-radius: 6px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-primary {
+      background-color: var(--amber);
+      color: #121519;
+      border: none;
+    }
+
+    .btn-secondary {
+      background-color: #161b21;
+      color: var(--text-white);
+      border: 1px solid var(--border-color);
+    }
+
+    .hero-stats {
+      display: flex;
+      align-items: flex-start;
+      gap: 52px;
+      padding-top: 10px;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-value {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--text-white);
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+    }
+
+    .reserve-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 32px 30px;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
+      width: 100%;
+      max-width: 480px;
+      margin-left: auto;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px dashed #2d3844;
+      padding-bottom: 16px;
+      margin-bottom: 24px;
+    }
+
+    .card-header-title {
+      color: var(--red);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+    }
+
+    .card-header-formno {
+      color: var(--text-dim);
+      font-size: 0.78rem;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .form-control {
+      width: 100%;
+      background-color: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      color: var(--text-white);
+      padding: 13px 14px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      outline: none;
+    }
+
+    .form-control:focus {
+      border-color: var(--amber);
+    }
+
+    select.form-control {
+      cursor: pointer;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .date-input-wrapper {
+      position: relative;
+    }
+
+    .date-input-wrapper input {
+      padding-right: 34px;
+    }
+
+    .calendar-icon {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    .btn-search {
+      width: 100%;
+      background-color: var(--amber);
+      color: #121519;
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 15px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      margin-top: 6px;
+    }
+
+    .fleet-section {
+      max-width: 1280px;
+      margin: 30px auto 80px;
+      padding: 0 32px;
+    }
+
+    .section-title-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--border-color);
+      padding-top: 40px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .filter-tabs {
+      display: flex;
+      background: #161b21;
+      padding: 4px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .filter-tab {
+      background: transparent;
+      color: var(--text-muted);
+      border: none;
+      padding: 8px 16px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .filter-tab.active {
+      background: var(--amber);
+      color: #121519;
+    }
+
+    .management-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .vehicle-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 24px;
+    }
+
+    .fleet-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .fleet-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .fleet-card-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-white);
+    }
+
+    .fleet-badge {
+      background: rgba(229, 157, 59, 0.15);
+      color: var(--amber);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .fleet-specs {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+
+    .spec-pill {
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      padding: 4px 10px;
+      border-radius: 4px;
+    }
+
+    .fleet-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 16px;
+      margin-top: auto;
+    }
+
+    .fleet-price {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+
+    .price-number {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--amber);
+    }
+
+    .price-unit {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    .card-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-rent {
+      background-color: var(--amber);
+      color: #121519;
+      font-weight: 700;
+      font-size: 0.88rem;
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-rent.disabled {
+      background-color: #252d36;
+      color: #64748b;
+      cursor: not-allowed;
+    }
+
+    .btn-delete-icon {
+      background: #251e22;
+      color: #ef4444;
+      border: 1px solid #4a2327;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 12, 16, 0.8);
+      backdrop-filter: blur(6px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal-box {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      width: 100%;
+      max-width: 520px;
+      padding: 30px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+      font-size: 0.9rem;
+    }
+
+    .data-table th {
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-muted);
+      text-align: left;
+      padding: 10px 8px;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      font-family: 'Space Mono', monospace;
+    }
+
+    .data-table td {
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 12px 8px;
+    }
+
+    .btn-return-action {
+      background: #10b981;
+      color: #0b2e20;
+      font-weight: 700;
+      font-size: 0.78rem;
+      padding: 6px 12px;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .footer {
+      border-top: 1px solid var(--border-color);
+      padding: 24px 32px;
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 992px) {
+      .hero-container {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .reserve-card {
+        margin: 0 auto;
+      }
+
+      .nav-menu {
+        display: none;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .hero-title {
+        font-size: 2.8rem;
+      }
+
+      .hero-stats {
+        gap: 28px;
+        flex-wrap: wrap;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ===== DARK THEME / READABILITY ENHANCEMENTS ===== */
+    html {
+      scroll-behavior: smooth;
+      background: var(--bg-dark);
+    }
+
+    body {
+      background:
+        radial-gradient(circle at 78% 8%, rgba(229, 157, 59, 0.11), transparent 30%),
+        radial-gradient(circle at 8% 45%, rgba(76, 104, 140, 0.08), transparent 28%),
+        linear-gradient(180deg, #0d1116 0%, #121519 52%, #0d1116 100%);
+      color: #f8fafc;
+    }
+
+    ::selection {
+      background: rgba(229, 157, 59, 0.35);
+      color: #ffffff;
+    }
+
+    .navbar {
+      position: relative;
+      z-index: 10;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .logo-container,
+    .nav-link {
+      color: #f8fafc;
+    }
+
+    .logo-container:hover,
+    .nav-link:hover {
+      color: var(--amber);
+    }
+
+    .logo-text {
+      letter-spacing: -0.5px;
+    }
+
+    .nav-link {
+      transition: color .2s ease;
+    }
+
+    .btn-book-now,
+    .btn-primary,
+    .btn-search,
+    .btn-rent {
+      box-shadow: 0 8px 20px rgba(229, 157, 59, 0.12);
+      transition: transform .18s ease, background-color .18s ease, box-shadow .18s ease;
+    }
+
+    .btn-book-now:hover,
+    .btn-primary:hover,
+    .btn-search:hover,
+    .btn-rent:not(.disabled):hover {
+      background-color: var(--amber-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(229, 157, 59, 0.20);
+    }
+
+    .btn-secondary {
+      color: #f1f5f9;
+      background: #171d24;
+      border-color: #33404d;
+      transition: transform .18s ease, border-color .18s ease, background-color .18s ease;
+    }
+
+    .btn-secondary:hover {
+      background: #1d252e;
+      border-color: #526171;
+      transform: translateY(-1px);
+    }
+
+    .hero-title {
+      color: #ffffff;
+      letter-spacing: -2px;
+      text-shadow: 0 8px 30px rgba(0,0,0,.25);
+    }
+
+    .hero-title .highlight {
+      color: var(--amber);
+    }
+
+    .hero-desc {
+      color: #b7c2ce;
+    }
+
+    .status-badge {
+      color: #f2b65e;
+    }
+
+    .stat-value {
+      color: #ffffff;
+    }
+
+    .stat-label {
+      color: #9eabb8;
+    }
+
+    .reserve-card,
+    .fleet-card,
+    .modal-box {
+      background: linear-gradient(145deg, #1a2027 0%, #151a20 100%);
+      border-color: #303b47;
+      box-shadow:
+        0 18px 45px rgba(0,0,0,.38),
+        inset 0 1px 0 rgba(255,255,255,.025);
+    }
+
+    .reserve-card:hover,
+    .fleet-card:hover {
+      border-color: #3b4855;
+    }
+
+    .card-header {
+      border-bottom-color: #34404c;
+    }
+
+    .card-header-title,
+    .section-title {
+      color: #ffffff;
+    }
+
+    .card-header-formno {
+      color: #82909e;
+    }
+
+    .form-label {
+      color: #aeb9c5;
+      font-weight: 700;
+    }
+
+    .form-control {
+      color: #f8fafc;
+      background: #0e1318;
+      border-color: #35414e;
+      min-height: 46px;
+      transition: border-color .18s ease, box-shadow .18s ease, background-color .18s ease;
+    }
+
+    .form-control::placeholder {
+      color: #71808e;
+    }
+
+    .form-control:hover {
+      border-color: #465462;
+    }
+
+    .form-control:focus {
+      border-color: var(--amber);
+      background: #10161c;
+      box-shadow: 0 0 0 3px rgba(229,157,59,.10);
+    }
+
+    select.form-control option {
+      background: #11171d;
+      color: #f8fafc;
+    }
+
+    .section-title-bar {
+      border-top-color: #303a45;
+    }
+
+    .section-title-bar p,
+    .fleet-specs,
+    .price-unit {
+      color: #9eabb8 !important;
+    }
+
+    code {
+      color: #f3c273;
+      background: rgba(229,157,59,.08);
+      border: 1px solid rgba(229,157,59,.14);
+      padding: 2px 5px;
+      border-radius: 4px;
+    }
+
+    .filter-tabs {
+      background: #11171d;
+      border-color: #303b47;
+    }
+
+    .filter-tab {
+      color: #a8b4c0;
+      transition: background-color .18s ease, color .18s ease;
+    }
+
+    .filter-tab:hover {
+      color: #ffffff;
+      background: #202832;
+    }
+
+    .filter-tab.active {
+      color: #121519;
+    }
+
+    .fleet-card {
+      transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+    }
+
+    .fleet-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 18px 40px rgba(0,0,0,.34);
+    }
+
+    .fleet-card-title {
+      color: #ffffff;
+    }
+
+    .fleet-specs {
+      color: #aab6c2;
+    }
+
+    .spec-pill {
+      color: #c5ced7;
+      background: #10161c;
+      border-color: #303c48;
+    }
+
+    .btn-delete-icon {
+      transition: background-color .18s ease, border-color .18s ease;
+    }
+
+    .btn-delete-icon:hover {
+      background: #351d23;
+      border-color: #713039;
+    }
+
+    .data-table th {
+      color: #aeb9c5;
+      border-bottom-color: #34404c;
+    }
+
+    .data-table td {
+      color: #e5eaf0;
+      border-bottom-color: #28323d;
+    }
+
+    .data-table tr:hover td {
+      background: rgba(255,255,255,.018);
+    }
+
+    .modal-overlay {
+      background: rgba(3, 6, 10, 0.84);
+    }
+
+    .modal-close:hover {
+      color: #ffffff;
+    }
+
+    .footer {
+      border-top-color: #303a45;
+      color: #83919e;
+    }
+
+    .btn-return-action {
+      box-shadow: 0 5px 14px rgba(16,185,129,.12);
+    }
+
+    @media (max-width: 600px) {
+      .navbar,
+      .hero-container,
+      .fleet-section {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .hero-title {
+        letter-spacing: -1.5px;
+      }
+
+      .reserve-card {
+        padding: 24px 20px;
+      }
+
+      .vehicle-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+
+<header class="navbar">
+
+  <a href="#" class="logo-container">
+    <div class="logo-icon">
+      <div class="logo-icon-inner"></div>
+    </div>
+    <span class="logo-text">Milemark</span>
+  </a>
+
+  <nav class="nav-menu">
+    <a href="#fleet" class="nav-link">Fleet</a>
+
+    <a href="javascript:void(0)"
+       onclick="openHowItWorksModal()"
+       class="nav-link">
+      How it works
+    </a>
+
+    <a href="javascript:void(0)"
+       onclick="openRentalsModal()"
+       class="nav-link">
+      Active Bookings (<span id="activeCountBadge">0</span>)
+    </a>
+
+    <a href="javascript:void(0)"
+       onclick="openAddVehicleModal()"
+       class="nav-link">
+      + Add Vehicle
+    </a>
+  </nav>
+
+  <button class="btn-book-now" onclick="scrollToFleet()">
+    Book now
+  </button>
+
+</header>
+
+
+<main class="hero-container">
+
+  <div class="hero-left">
+
+    <div class="status-badge mono">
+      <span class="status-dot"></span>
+      OPEN 06:00 - 23:00, EVERY LOCATION
+    </div>
+
+    <h1 class="hero-title">
+      GRAB THE<br>
+      KEYS.<br>
+      SKIP THE<br>
+      <span class="highlight">COUNTER.</span>
+    </h1>
+
+    <p class="hero-desc">
+      Reserve online, verify your license from your phone, and walk straight to the vehicle.
+      Milemark keeps the paperwork out of your way — the road's the part that matters.
+    </p>
+
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="scrollToFleet()">
+        Browse the fleet
+      </button>
+
+      <button class="btn-secondary" onclick="openHowItWorksModal()">
+        How it works
+      </button>
+    </div>
+
+    <div class="hero-stats">
+
+      <div class="stat-item">
+        <span class="stat-value" id="statReadyVehicles">0</span>
+        <span class="stat-label mono">vehicles ready today</span>
+      </div>
+
+      <div class="stat-item">
+        <span class="stat-value">19</span>
+        <span class="stat-label mono">city locations</span>
+      </div>
+
+      <div class="stat-item">
+        <span class="stat-value">4.8</span>
+        <span class="stat-label mono">avg. renter rating</span>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="reserve-card">
+
+    <div class="card-header">
+      <span class="card-header-title mono">
+        RESERVE A VEHICLE
+      </span>
+
+      <span class="card-header-formno mono">
+        Form No. 07-A
+      </span>
+    </div>
+
+    <form id="reserveForm" onsubmit="handleSearch(event)">
+
+      <div class="form-group">
+
+        <label class="form-label mono">
+          PICKUP LOCATION
+        </label>
+
+        <select id="pickupLocation" class="form-control">
+
+          <option value="Downtown — Fleet St. Depot">
+            Downtown — Fleet St. Depot
+          </option>
+
+          <option value="Airport Terminal 2">
+            Airport Terminal 2
+          </option>
+
+          <option value="Uptown Station Plaza">
+            Uptown Station Plaza
+          </option>
+
+          <option value="Harbor Bay Depot">
+            Harbor Bay Depot
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <div class="form-group form-row">
+
+        <div class="date-input-wrapper">
+
+          <label class="form-label mono">
+            PICKUP DATE
+          </label>
+
+          <input
+            type="text"
+            id="pickupDate"
+            class="form-control mono"
+            value="16-07-2026"
+            required
+          />
+
+          <span class="calendar-icon">📅</span>
+
+        </div>
+
+
+        <div class="date-input-wrapper">
+
+          <label class="form-label mono">
+            RETURN DATE
+          </label>
+
+          <input
+            type="text"
+            id="returnDate"
+            class="form-control mono"
+            value="19-07-2026"
+            required
+          />
+
+          <span class="calendar-icon">📅</span>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label class="form-label mono">
+          VEHICLE CLASS
+        </label>
+
+        <select
+          id="vehicleClass"
+          class="form-control"
+          onchange="filterFleetByClass(this.value)"
+        >
+
+          <option value="All">All Classes</option>
+          <option value="Compact">Compact</option>
+          <option value="Sedan">Sedan</option>
+          <option value="SUV">SUV</option>
+          <option value="Luxury">Luxury</option>
+          <option value="Bike">Bike</option>
+
+        </select>
+
+      </div>
+
+
+      <button type="submit" class="btn-search">
+        Search available fleet
+      </button>
+
+    </form>
+
+  </div>
+
+</main>
+
+
+<section id="fleet" class="fleet-section">
+
+  <div class="section-title-bar">
+
+    <div>
+
+      <h2 class="section-title">
+        Available Fleet
+      </h2>
+
+      <p style="color: var(--text-muted); font-size: 0.9rem;">
+        Browse models, book instantly via
+        <code>POST /api/rent</code>,
+        or delete via
+        <code>DELETE /api/vehicles/:id</code>.
+      </p>
+
+    </div>
+
+
+    <div class="filter-tabs">
+
+      <button
+        class="filter-tab active"
+        onclick="setCategoryFilter('All', this)">
+        All
+      </button>
+
+      <button
+        class="filter-tab"
+        onclick="setCategoryFilter('Compact', this)">
+        Compact
+      </button>
+
+      <button
+        class="filter-tab"
+        onclick="setCategoryFilter('Sedan', this)">
+        Sedan
+      </button>
+
+      <button
+        class="filter-tab"
+        onclick="setCategoryFilter('SUV', this)">
+        SUV
+      </button>
+
+      <button
+        class="filter-tab"
+        onclick="setCategoryFilter('Luxury', this)">
+        Luxury
+      </button>
+
+      <button
+        class="filter-tab"
+        onclick="setCategoryFilter('Bike', this)">
+        Bike
+      </button>
+
+    </div>
+
+
+    <div class="management-buttons">
+
+      <button
+        class="btn-secondary"
+        onclick="openAddVehicleModal()">
+        + Add Vehicle [POST]
+      </button>
+
+      <button
+        class="btn-secondary"
+        onclick="openRentalsModal()">
+        Active Rentals [PUT / GET]
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div id="fleetGrid" class="vehicle-grid"></div>
+
+</section>
+
+
+<!-- RENT MODAL -->
+
+<div id="rentModal" class="modal-overlay">
+
+  <div class="modal-box">
+
+    <button
+      class="modal-close"
+      onclick="closeModal('rentModal')">
+      &times;
+    </button>
+
+    <div class="card-header">
+
+      <span class="card-header-title mono">
+        CONFIRM RESERVATION
+      </span>
+
+      <span
+        class="card-header-formno mono"
+        id="modalVehicleCode">
+        Form No. 07-B
+      </span>
+
+    </div>
+
+
+    <form id="rentForm" onsubmit="submitRental(event)">
+
+      <input
+        type="hidden"
+        id="modalVehicleId"
+      />
+
+
+      <div style="
+        background: var(--bg-input);
+        padding: 14px;
+        border-radius: 6px;
+        margin-bottom: 18px;
+        border: 1px solid var(--border-color);
+      ">
+
+        <div
+          style="font-weight: 700; font-size: 1.15rem;"
+          id="modalVehicleName">
+          Vehicle
+        </div>
+
+        <div
+          style="color: var(--amber); font-weight: 700; margin-top: 4px;"
+          id="modalVehicleRate">
+          $0 / day
+        </div>
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label class="form-label mono">
+          CUSTOMER FULL NAME *
+        </label>
+
+        <input
+          type="text"
+          id="custName"
+          class="form-control"
+          placeholder="e.g. John Miller"
+          required
+        />
+
+      </div>
+
+
+      <div class="form-group form-row">
+
+        <div>
+
+          <label class="form-label mono">
+            RENTAL DAYS *
+          </label>
+
+          <input
+            type="number"
+            id="custDays"
+            class="form-control mono"
+            min="1"
+            max="60"
+            value="3"
+            oninput="updateTotalCalc()"
+            required
+          />
+
+        </div>
+
+
+        <div>
+
+          <label class="form-label mono">
+            ESTIMATED TOTAL
+          </label>
+
+          <div
+            id="custTotal"
+            style="
+              padding: 13px 14px;
+              background: var(--bg-input);
+              border: 1px solid var(--border-color);
+              border-radius: 6px;
+              font-weight: 800;
+              color: var(--amber);
+              font-family: 'Space Mono';
+            ">
+            $0
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <button type="submit" class="btn-search">
+        Confirm & Rent Vehicle
+      </button>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+<!-- ADD VEHICLE MODAL -->
+
+<div id="addModal" class="modal-overlay">
+
+  <div class="modal-box">
+
+    <button
+      class="modal-close"
+      onclick="closeModal('addModal')">
+      &times;
+    </button>
+
+    <div class="card-header">
+
+      <span class="card-header-title mono">
+        ADD VEHICLE TO FLEET
+      </span>
+
+      <span class="card-header-formno mono">
+        API [POST]
+      </span>
+
+    </div>
+
+
+    <form
+      id="addVehicleForm"
+      onsubmit="submitAddVehicle(event)"
+    >
+
+      <div class="form-group">
+
+        <label class="form-label mono">
+          VEHICLE NAME & MODEL *
+        </label>
+
+        <input
+          type="text"
+          id="newVehName"
+          class="form-control"
+          placeholder="e.g. Audi A4 Quattro"
+          required
+        />
+
+      </div>
+
+
+      <div class="form-group form-row">
+
+        <div>
+
+          <label class="form-label mono">
+            CLASS *
+          </label>
+
+          <select
+            id="newVehType"
+            class="form-control"
+            required
+          >
+
+            <option value="Compact">Compact</option>
+            <option value="Sedan">Sedan</option>
+            <option value="SUV">SUV</option>
+            <option value="Luxury">Luxury</option>
+            <option value="Bike">Bike</option>
+
+          </select>
+
+        </div>
+
+
+        <div>
+
+          <label class="form-label mono">
+            PRICE PER DAY ($) *
+          </label>
+
+          <input
+            type="number"
+            id="newVehPrice"
+            class="form-control mono"
+            min="10"
+            placeholder="e.g. 75"
+            required
+          />
+
+        </div>
+
+      </div>
+
+
+      <div class="form-group form-row">
+
+        <div>
+
+          <label class="form-label mono">
+            SEATS
+          </label>
+
+          <input
+            type="number"
+            id="newVehSeats"
+            class="form-control mono"
+            value="5"
+          />
+
+        </div>
+
+
+        <div>
+
+          <label class="form-label mono">
+            TRANSMISSION
+          </label>
+
+          <select
+            id="newVehGear"
+            class="form-control"
+          >
+
+            <option value="Auto">Auto</option>
+            <option value="Manual">Manual</option>
+            <option value="AWD">AWD</option>
+            <option value="Electric">Electric</option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label class="form-label mono">
+          FUEL
+        </label>
+
+        <select
+          id="newVehFuel"
+          class="form-control"
+        >
+
+          <option value="Petrol">Petrol</option>
+          <option value="Diesel">Diesel</option>
+          <option value="Hybrid">Hybrid</option>
+          <option value="Electric">Electric</option>
+
+        </select>
+
+      </div>
+
+
+      <button type="submit" class="btn-search">
+        Add to Fleet
+      </button>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+<!-- RENTALS MODAL -->
+
+<div id="rentalsModal" class="modal-overlay">
+
+  <div class="modal-box" style="max-width: 640px;">
+
+    <button
+      class="modal-close"
+      onclick="closeModal('rentalsModal')">
+      &times;
+    </button>
+
+    <div class="card-header">
+
+      <span class="card-header-title mono">
+        ACTIVE RENTALS MANAGEMENT
+      </span>
+
+      <span class="card-header-formno mono">
+        API [PUT / GET]
+      </span>
+
+    </div>
+
+
+    <div style="overflow-x: auto;">
+
+      <table class="data-table">
+
+        <thead>
+
+          <tr>
+            <th>ID</th>
+            <th>Vehicle</th>
+            <th>Customer</th>
+            <th>Days</th>
+            <th>Cost</th>
+            <th>Action</th>
+          </tr>
+
+        </thead>
+
+        <tbody id="rentalsTableBody"></tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- HOW IT WORKS MODAL -->
+
+<div id="howModal" class="modal-overlay">
+
+  <div class="modal-box" style="max-width: 580px;">
+
+    <button
+      class="modal-close"
+      onclick="closeModal('howModal')">
+      &times;
+    </button>
+
+    <div class="card-header">
+
+      <span class="card-header-title mono">
+        HOW MILEMARK WORKS
+      </span>
+
+      <span class="card-header-formno mono">
+        Express Architecture
+      </span>
+
+    </div>
+
+
+    <div style="
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      line-height: 1.7;
+    ">
+
+      <p style="margin-bottom: 14px;">
+        <strong>1. Express Middleware:</strong>
+        Incoming requests are parsed with
+        <code>express.json()</code>
+        and served from the public folder.
+      </p>
+
+      <p style="margin-bottom: 14px;">
+
+        <strong>2. RESTful Services:</strong>
+
+        <br>
+        • <code>GET /api/vehicles</code> - Read fleet
+
+        <br>
+        • <code>POST /api/vehicles</code> - Create vehicle
+
+        <br>
+        • <code>POST /api/rent/:id</code> - Rent vehicle
+
+        <br>
+        • <code>PUT /api/return/:id</code> - Return vehicle
+
+        <br>
+        • <code>DELETE /api/vehicles/:id</code> - Delete vehicle
+
+      </p>
+
+      <p>
+        <strong>3. MongoDB:</strong>
+        Vehicle and rental information is stored permanently in MongoDB.
+      </p>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<footer class="footer mono">
+  © 2026 Milemark Vehicle Rental Systems Inc.
+  Express.js RESTful Engine & MongoDB.
+</footer>
+
+
+<script>
+
+  let fleet = [];
+  let currentCategory = 'All';
+  let selectedVehicle = null;
+
+
+  // =====================================================
+  // GET VEHICLES
+  // =====================================================
+
+  async function fetchFleet() {
+
+    try {
+
+      let url = '/api/vehicles';
+
+      if (currentCategory && currentCategory !== 'All') {
+        url += `?type=${encodeURIComponent(currentCategory)}`;
+      }
+
+      const res = await fetch(url);
+
+      if (!res.ok) {
+        throw new Error('Failed to fetch vehicles');
+      }
+
+      fleet = await res.json();
+
+      renderFleetGrid();
+
+      updateStats();
+
+    } catch (err) {
+
+      console.error('Error fetching vehicles:', err);
+
+    }
+
+  }
+
+
+  // =====================================================
+  // RENDER VEHICLES
+  // =====================================================
+
+  function renderFleetGrid() {
+
+    const grid = document.getElementById('fleetGrid');
+
+    grid.innerHTML = '';
+
+
+    if (fleet.length === 0) {
+
+      grid.innerHTML = `
+        <div style="
+          grid-column: 1/-1;
+          text-align: center;
+          padding: 40px;
+          background: var(--bg-card);
+          border-radius: 8px;
+          border: 1px solid var(--border-color);
+        ">
+          <p style="color: var(--text-muted);">
+            No vehicles found for class "${currentCategory}".
+          </p>
+        </div>
+      `;
+
+      return;
+
+    }
+
+
+    fleet.forEach(v => {
+
+      const card = document.createElement('div');
+
+      card.className = 'fleet-card';
+
+
+      card.innerHTML = `
+
+        <div>
+
+          <div class="fleet-card-header">
+
+            <h3 class="fleet-card-title">
+              ${v.name}
+            </h3>
+
+            <span class="fleet-badge mono">
+              ${v.type}
+            </span>
+
+          </div>
+
+
+          <div class="fleet-specs mono">
+
+            <span class="spec-pill">
+              👥 ${v.seats || 5} Seats
+            </span>
+
+            <span class="spec-pill">
+              ⚙️ ${v.gear || 'Auto'}
+            </span>
+
+            <span class="spec-pill">
+              ⛽ ${v.fuel || 'Petrol'}
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div class="fleet-card-footer">
+
+          <div class="fleet-price">
+
+            <span class="price-number">
+              $${v.pricePerDay}
+            </span>
+
+            <span class="price-unit mono">
+              / day
+            </span>
+
+          </div>
+
+
+          <div class="card-actions">
+
+            ${
+              v.available
+
+              ?
+
+              `<button
+                class="btn-rent"
+                onclick="openRentModal('${v._id}')">
+                Rent Now
+              </button>`
+
+              :
+
+              `<button
+                class="btn-rent disabled"
+                disabled>
+                Rented Out
+              </button>`
+            }
+
+
+            <button
+              class="btn-delete-icon"
+              title="Delete Vehicle"
+              onclick="deleteVehicle('${v._id}', '${escapeHtml(v.name)}')">
+              🗑️
+            </button>
+
+          </div>
+
+        </div>
+
+      `;
+
+
+      grid.appendChild(card);
+
+    });
+
+  }
+
+
+  // =====================================================
+  // ESCAPE HTML
+  // =====================================================
+
+  function escapeHtml(text) {
+
+    return String(text)
+      .replace(/&/g, '&amp;')
+      .replace(/'/g, "\\'")
+      .replace(/"/g, '&quot;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+
+  }
+
+
+  // =====================================================
+  // FILTER
+  // =====================================================
+
+  function setCategoryFilter(category, btnElement) {
+
+    currentCategory = category;
+
+    document
+      .querySelectorAll('.filter-tab')
+      .forEach(b => b.classList.remove('active'));
+
+
+    if (btnElement) {
+      btnElement.classList.add('active');
+    }
+
+
+    const select =
+      document.getElementById('vehicleClass');
+
+    if (select) {
+      select.value = category;
+    }
+
+
+    fetchFleet();
+
+  }
+
+
+  function filterFleetByClass(val) {
+
+    currentCategory = val;
+
+
+    document
+      .querySelectorAll('.filter-tab')
+      .forEach(b => {
+
+        if (b.textContent.trim() === val) {
+          b.classList.add('active');
+        } else {
+          b.classList.remove('active');
+        }
+
+      });
+
+
+    fetchFleet();
+
+  }
+
+
+  function handleSearch(e) {
+
+    e.preventDefault();
+
+    const selectedClass =
+      document.getElementById('vehicleClass').value;
+
+    currentCategory = selectedClass;
+
+    fetchFleet();
+
+    scrollToFleet();
+
+  }
+
+
+  function scrollToFleet() {
+
+    document
+      .getElementById('fleet')
+      .scrollIntoView({
+        behavior: 'smooth'
+      });
+
+  }
+
+
+  // =====================================================
+  // OPEN RENT MODAL
+  // IMPORTANT: USE MONGODB _id
+  // =====================================================
+
+  function openRentModal(id) {
+
+    console.log("Selected MongoDB vehicle ID:", id);
+
+
+    const v =
+      fleet.find(item => String(item._id) === String(id));
+
+
+    if (!v) {
+
+      console.error(
+        "Vehicle not found:",
+        id,
+        fleet
+      );
+
+      alert("Vehicle information not found.");
+
+      return;
+
+    }
+
+
+    selectedVehicle = v;
+
+
+    document
+      .getElementById('modalVehicleId')
+      .value = v._id;
+
+
+    document
+      .getElementById('modalVehicleName')
+      .textContent = v.name;
+
+
+    document
+      .getElementById('modalVehicleRate')
+      .textContent =
+        `$${v.pricePerDay} / day`;
+
+
+    document
+      .getElementById('modalVehicleCode')
+      .textContent =
+        `ID: ${v._id}`;
+
+
+    document
+      .getElementById('custDays')
+      .value = 3;
+
+
+    updateTotalCalc();
+
+
+    document
+      .getElementById('rentModal')
+      .classList.add('open');
+
+  }
+
+
+  // =====================================================
+  // TOTAL CALCULATION
+  // =====================================================
+
+  function updateTotalCalc() {
+
+    if (!selectedVehicle) {
+      return;
+    }
+
+
+    const days =
+      Number(
+        document.getElementById('custDays').value
+      ) || 1;
+
+
+    const total =
+      days * selectedVehicle.pricePerDay;
+
+
+    document
+      .getElementById('custTotal')
+      .textContent = `$${total}`;
+
+  }
+
+
+  // =====================================================
+  // RENT VEHICLE
+  // =====================================================
+
+  async function submitRental(e) {
+
+    e.preventDefault();
+
+
+    const id =
+      document.getElementById('modalVehicleId').value;
+
+
+    const customerName =
+      document.getElementById('custName').value.trim();
+
+
+    const days =
+      document.getElementById('custDays').value;
+
+
+    const pickupLocation =
+      document.getElementById('pickupLocation').value;
+
+
+    console.log(
+      "Renting vehicle MongoDB ID:",
+      id
+    );
+
+
+    if (!id) {
+
+      alert("Vehicle ID is missing.");
+
+      return;
+
+    }
+
+
+    try {
+
+      const res =
+        await fetch(`/api/rent/${id}`, {
+
+          method: 'POST',
+
+          headers: {
+            'Content-Type': 'application/json'
+          },
+
+          body: JSON.stringify({
+            customerName,
+            days,
+            pickupLocation
+          })
+
+        });
+
+
+      const result =
+        await res.json();
+
+
+      console.log(
+        "Rent response:",
+        result
+      );
+
+
+      if (!res.ok) {
+
+        alert(
+          result.error ||
+          "Failed to rent vehicle."
+        );
+
+        return;
+
+      }
+
+
+      alert(
+        result.message ||
+        "Vehicle reserved successfully!"
+      );
+
+
+      closeModal('rentModal');
+
+
+      document
+        .getElementById('rentForm')
+        .reset();
+
+
+      selectedVehicle = null;
+
+
+      await fetchFleet();
+
+      await fetchRentals();
+
+    }
+
+
+    catch (err) {
+
+      console.error(
+        "Rent error:",
+        err
+      );
+
+      alert(
+        "Error booking vehicle."
+      );
+
+    }
+
+  }
+
+
+  // =====================================================
+  // DELETE VEHICLE
+  // =====================================================
+
+  async function deleteVehicle(id, name) {
+
+    if (
+      !confirm(
+        `Are you sure you want to delete "${name}" from the fleet?`
+      )
+    ) {
+      return;
+    }
+
+
+    try {
+
+      const res =
+        await fetch(
+          `/api/vehicles/${id}`,
+          {
+            method: 'DELETE'
+          }
+        );
+
+
+      const result =
+        await res.json();
+
+
+      if (!res.ok) {
+
+        alert(
+          result.error ||
+          "Failed to delete vehicle."
+        );
+
+        return;
+
+      }
+
+
+      alert(
+        result.message ||
+        "Vehicle deleted from fleet."
+      );
+
+
+      await fetchFleet();
+
+      await fetchRentals();
+
+    }
+
+
+    catch (err) {
+
+      console.error(
+        "Delete error:",
+        err
+      );
+
+      alert(
+        "Failed to delete vehicle."
+      );
+
+    }
+
+  }
+
+
+  // =====================================================
+  // ADD VEHICLE MODAL
+  // =====================================================
+
+  function openAddVehicleModal() {
+
+    document
+      .getElementById('addModal')
+      .classList.add('open');
+
+  }
+
+
+  // =====================================================
+  // ADD VEHICLE
+  // =====================================================
+
+  async function submitAddVehicle(e) {
+
+    e.preventDefault();
+
+
+    const name =
+      document.getElementById('newVehName').value.trim();
+
+
+    const type =
+      document.getElementById('newVehType').value;
+
+
+    const pricePerDay =
+      document.getElementById('newVehPrice').value;
+
+
+    const seats =
+      document.getElementById('newVehSeats').value;
+
+
+    const gear =
+      document.getElementById('newVehGear').value;
+
+
+    const fuel =
+      document.getElementById('newVehFuel').value;
+
+
+    try {
+
+      const res =
+        await fetch('/api/vehicles', {
+
+          method: 'POST',
+
+          headers: {
+            'Content-Type': 'application/json'
+          },
+
+          body: JSON.stringify({
+            name,
+            type,
+            pricePerDay,
+            seats,
+            gear,
+            fuel
+          })
+
+        });
+
+
+      const result =
+        await res.json();
+
+
+      if (!res.ok) {
+
+        alert(
+          result.error ||
+          "Failed to add vehicle."
+        );
+
+        return;
+
+      }
+
+
+      alert(
+        result.message ||
+        "New vehicle added to fleet!"
+      );
+
+
+      closeModal('addModal');
+
+
+      document
+        .getElementById('addVehicleForm')
+        .reset();
+
+
+      await fetchFleet();
+
+    }
+
+
+    catch (err) {
+
+      console.error(
+        "Add vehicle error:",
+        err
+      );
+
+      alert(
+        "Failed to add vehicle."
+      );
+
+    }
+
+  }
+
+
+  // =====================================================
+  // RENTALS MODAL
+  // =====================================================
+
+  function openRentalsModal() {
+
+    document
+      .getElementById('rentalsModal')
+      .classList.add('open');
+
+
+    fetchRentals();
+
+  }
+
+
+  // =====================================================
+  // GET RENTALS
+  // =====================================================
+
+  async function fetchRentals() {
+
+    try {
+
+      const res =
+        await fetch('/api/rentals');
+
+
+      if (!res.ok) {
+        throw new Error(
+          'Failed to fetch rentals'
+        );
+      }
+
+
+      const rentals =
+        await res.json();
+
+
+      const tbody =
+        document.getElementById(
+          'rentalsTableBody'
+        );
+
+
+      const badge =
+        document.getElementById(
+          'activeCountBadge'
+        );
+
+
+      if (badge) {
+        badge.textContent =
+          rentals.length;
+      }
+
+
+      tbody.innerHTML = '';
+
+
+      if (rentals.length === 0) {
+
+        tbody.innerHTML = `
+          <tr>
+            <td
+              colspan="6"
+              style="
+                text-align: center;
+                color: var(--text-dim);
+                padding: 20px;
+              "
+            >
+              No active rentals currently.
+            </td>
+          </tr>
+        `;
+
+        return;
+
+      }
+
+
+      rentals.forEach(r => {
+
+        const row =
+          document.createElement('tr');
+
+
+        row.innerHTML = `
+
+          <td class="mono">
+            #${r._id}
+          </td>
+
+          <td>
+            <strong>
+              ${r.vehicleName}
+            </strong>
+          </td>
+
+          <td>
+            ${r.customerName}
+          </td>
+
+          <td class="mono">
+            ${r.days}d
+          </td>
+
+          <td
+            class="mono"
+            style="
+              color: var(--amber);
+              font-weight: 700;
+            "
+          >
+            $${r.totalCost}
+          </td>
+
+          <td>
+
+            <button
+              class="btn-return-action"
+              onclick="returnVehicle('${r.vehicleId}')"
+            >
+              Return
+            </button>
+
+          </td>
+
+        `;
+
+
+        tbody.appendChild(row);
+
+      });
+
+    }
+
+
+    catch (err) {
+
+      console.error(
+        'Error fetching rentals:',
+        err
+      );
+
+    }
+
+  }
+
+
+  // =====================================================
+  // RETURN VEHICLE
+  // =====================================================
+
+  async function returnVehicle(vehicleId) {
+
+    console.log(
+      "Returning vehicle:",
+      vehicleId
+    );
+
+
+    if (!vehicleId) {
+
+      alert(
+        "Vehicle ID is missing."
+      );
+
+      return;
+
+    }
+
+
+    try {
+
+      const res =
+        await fetch(
+          `/api/return/${vehicleId}`,
+          {
+            method: 'PUT'
+          }
+        );
+
+
+      const result =
+        await res.json();
+
+
+      if (!res.ok) {
+
+        alert(
+          result.error ||
+          "Failed to return vehicle."
+        );
+
+        return;
+
+      }
+
+
+      alert(
+        result.message ||
+        "Vehicle returned!"
+      );
+
+
+      await fetchRentals();
+
+      await fetchFleet();
+
+    }
+
+
+    catch (err) {
+
+      console.error(
+        "Return error:",
+        err
+      );
+
+      alert(
+        "Failed to return vehicle."
+      );
+
+    }
+
+  }
+
+
+  // =====================================================
+  // HOW IT WORKS
+  // =====================================================
+
+  function openHowItWorksModal() {
+
+    document
+      .getElementById('howModal')
+      .classList.add('open');
+
+  }
+
+
+  // =====================================================
+  // CLOSE MODAL
+  // =====================================================
+
+  function closeModal(id) {
+
+    document
+      .getElementById(id)
+      .classList.remove('open');
+
+  }
+
+
+  // =====================================================
+  // BACKDROP CLICK
+  // =====================================================
+
+  document
+    .querySelectorAll('.modal-overlay')
+    .forEach(overlay => {
+
+      overlay.addEventListener(
+        'click',
+        (e) => {
+
+          if (e.target === overlay) {
+
+            overlay.classList.remove(
+              'open'
+            );
+
+          }
+
+        }
+      );
+
+    });
+
+
+  // =====================================================
+  // UPDATE STATS
+  // =====================================================
+
+  function updateStats() {
+
+    const availCount =
+      fleet.filter(
+        v => v.available
+      ).length;
+
+
+    const readyEl =
+      document.getElementById(
+        'statReadyVehicles'
+      );
+
+
+    if (readyEl) {
+
+      readyEl.textContent =
+        availCount;
+
+    }
+
+  }
+
+
+  // =====================================================
+  // INITIAL LOAD
+  // =====================================================
+
+  document.addEventListener(
+    'DOMContentLoaded',
+    async () => {
+
+      await fetchFleet();
+
+      await fetchRentals();
+
+    }
+  );
+
+</script>
+
+</body>
+</html>

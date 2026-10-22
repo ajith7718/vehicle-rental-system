@@ -1,0 +1,23 @@
+{
+  "name": "vehicle-rental-system",
+  "version": "1.0.0",
+  "description": "A beginner-level Express.js Vehicle Rental System with RESTful APIs, custom middleware, and interactive frontend",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": [
+    "express",
+    "rest-api",
+    "middleware",
+    "vehicle-rental",
+    "beginner"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.2",
+    "mongoose": "^9.11.1"
+  }
+}

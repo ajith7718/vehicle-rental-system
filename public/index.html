@@ -921,11 +921,26 @@
        class="nav-link">
       + Add Vehicle
     </a>
+
   </nav>
 
-  <button class="btn-book-now" onclick="scrollToFleet()">
-    Book now
-  </button>
+  <div style="display: flex; align-items: center; gap: 14px;" id="navAuthArea">
+    <div id="loggedOutNav" style="display: flex; align-items: center; gap: 12px;">
+      <a href="signup.html#login" class="nav-link" style="text-decoration: none;">Log In</a>
+      <a href="signup.html" class="nav-link" style="color: var(--amber); font-weight: 600; text-decoration: none;">Sign Up</a>
+    </div>
+    <div id="loggedInNav" style="display: none; align-items: center; gap: 10px;">
+      <span class="mono" style="font-size: 0.88rem; color: #cfd8dc; background: rgba(229,157,59,0.12); padding: 5px 12px; border-radius: 6px; border: 1px solid rgba(229,157,59,0.3);">
+        👤 <strong id="userDisplayName" style="color: var(--amber);">Driver</strong>
+      </span>
+      <button onclick="logoutUser()" style="background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.82rem; padding: 6px 12px; border-radius: 6px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)';" onmouseout="this.style.borderColor='var(--border-color)';this.style.color='var(--text-muted)';">
+        Log Out
+      </button>
+    </div>
+    <button class="btn-book-now" onclick="scrollToFleet()">
+      Book now
+    </button>
+  </div>
 
 </header>
 
@@ -2611,12 +2626,46 @@
 
 
   // =====================================================
+  // AUTH NAVIGATION STATE
+  // =====================================================
+
+  function initAuthNav() {
+    const raw = localStorage.getItem('currentUser');
+    const loggedOutNav = document.getElementById('loggedOutNav');
+    const loggedInNav = document.getElementById('loggedInNav');
+    const userDisplayName = document.getElementById('userDisplayName');
+
+    if (raw && loggedOutNav && loggedInNav) {
+      try {
+        const u = JSON.parse(raw);
+        if (u && (u.fname || u.uname)) {
+          userDisplayName.textContent = u.fname || u.uname;
+          loggedOutNav.style.display = 'none';
+          loggedInNav.style.display = 'inline-flex';
+          return;
+        }
+      } catch (e) {}
+    }
+    if (loggedOutNav && loggedInNav) {
+      loggedOutNav.style.display = 'inline-flex';
+      loggedInNav.style.display = 'none';
+    }
+  }
+
+  function logoutUser() {
+    localStorage.removeItem('currentUser');
+    window.location.reload();
+  }
+
+  // =====================================================
   // INITIAL LOAD
   // =====================================================
 
   document.addEventListener(
     'DOMContentLoaded',
     async () => {
+
+      initAuthNav();
 
       await fetchFleet();
 

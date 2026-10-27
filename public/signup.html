@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up & Log In | Milemark Vehicle Rental</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&family=Syne:wght@800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #121519;
+      --bg-card: #181d23;
+      --bg-card-hover: #1e242c;
+      --bg-input: #13171c;
+      --amber: #e59d3b;
+      --amber-hover: #d98f29;
+      --amber-subtle: rgba(229, 157, 59, 0.12);
+      --border-color: #27313c;
+      --border-subtle: #1e2630;
+      --text-white: #ffffff;
+      --text-muted: #8d9aa7;
+      --text-dim: #606d7d;
+      --green: #10b981;
+      --red: #ef4444;
+      --radius: 8px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image:
+        radial-gradient(circle at 75% 20%, rgba(229, 157, 59, 0.12) 0%, rgba(18, 21, 25, 0) 55%),
+        radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.03) 0%, rgba(18, 21, 25, 0) 45%);
+      color: var(--text-white);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      line-height: 1.5;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .mono {
+      font-family: 'Space Mono', monospace;
+    }
+
+    /* HEADER */
+    .header {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text-white);
+    }
+
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      border: 2.5px solid var(--amber);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-icon-inner {
+      width: 12px;
+      height: 10px;
+      background-color: var(--amber);
+      border-radius: 2px;
+    }
+
+    .logo-text {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+
+    .back-link:hover {
+      color: var(--amber);
+    }
+
+    /* MAIN CONTAINER */
+    .signup-wrapper {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 20px 60px;
+    }
+
+    .signup-card {
+      width: 100%;
+      max-width: 680px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 34px 40px 38px;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45);
+      position: relative;
+    }
+
+    /* AUTH TABS */
+    .auth-tabs {
+      display: flex;
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 4px;
+      margin-bottom: 24px;
+      gap: 4px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 10px 16px;
+      background: transparent;
+      border: none;
+      border-radius: 7px;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.92rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-white);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .tab-btn.active {
+      background: var(--bg-card);
+      color: var(--amber);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--border-color);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--amber);
+      font-size: 0.72rem;
+      letter-spacing: 1.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      background-color: var(--amber);
+      border-radius: 50%;
+    }
+
+    h1 {
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: var(--text-white);
+      margin-bottom: 6px;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 24px;
+    }
+
+    /* FORM GRID */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px 20px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .full-width {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #cfd8dc;
+      margin-bottom: 7px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    input {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      color: var(--text-white);
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+    }
+
+    input::placeholder {
+      color: var(--text-dim);
+      font-size: 0.88rem;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--amber);
+      box-shadow: 0 0 0 3px var(--amber-subtle);
+    }
+
+    input.valid {
+      border-color: rgba(16, 185, 129, 0.6);
+    }
+
+    input.invalid {
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+    }
+
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      filter: invert(0.8);
+      cursor: pointer;
+    }
+
+    .toggle-pwd {
+      position: absolute;
+      right: 12px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 4px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      transition: color 0.2s;
+    }
+
+    .toggle-pwd:hover {
+      color: var(--amber);
+    }
+
+    .error {
+      color: var(--red);
+      font-size: 0.78rem;
+      margin-top: 5px;
+      min-height: 16px;
+      font-weight: 500;
+    }
+
+    .pwd-requirements {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .req-pill {
+      font-size: 0.72rem;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: #1e2630;
+      color: var(--text-muted);
+      transition: all 0.2s;
+    }
+
+    .req-pill.met {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      font-weight: 600;
+    }
+
+    /* ACTIONS */
+    .form-actions {
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .btn-submit {
+      width: 100%;
+      background: var(--amber);
+      color: #121519;
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 13px;
+      border-radius: var(--radius);
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.2s, transform 0.1s;
+      letter-spacing: 0.2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-submit:hover:not(:disabled) {
+      background: var(--amber-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .btn-demo {
+      background: transparent;
+      border: 1px dashed var(--border-color);
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      align-self: center;
+      transition: all 0.2s;
+    }
+
+    .btn-demo:hover {
+      border-color: var(--amber);
+      color: var(--amber);
+    }
+
+    /* STATUS MESSAGE */
+    #message {
+      margin-top: 16px;
+      padding: 13px 18px;
+      border-radius: 8px;
+      font-size: 0.92rem;
+      text-align: center;
+      display: none;
+      line-height: 1.4;
+    }
+
+    #message.error-box {
+      display: block;
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      color: #fca5a5;
+    }
+
+    #message.success-box {
+      display: block;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #86efac;
+    }
+
+    /* SWITCH FOOTER LINK */
+    .switch-link {
+      text-align: center;
+      margin-top: 22px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .switch-link a {
+      color: var(--amber);
+      text-decoration: none;
+      font-weight: 600;
+      margin-left: 4px;
+      cursor: pointer;
+    }
+
+    .switch-link a:hover {
+      text-decoration: underline;
+    }
+
+    /* LOGIN FORM SPECIFIC */
+    #loginForm {
+      display: none;
+    }
+
+    .login-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    /* REDIRECT PROGRESS */
+    .redirect-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+      font-size: 0.85rem;
+      opacity: 0.9;
+    }
+
+    .spinner {
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(16, 185, 129, 0.3);
+      border-top-color: #34d399;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 620px) {
+      .signup-card {
+        padding: 24px 18px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .full-width {
+        grid-column: auto;
+      }
+
+      .header {
+        padding: 18px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <a href="index.html" class="logo-container">
+      <div class="logo-icon">
+        <div class="logo-icon-inner"></div>
+      </div>
+      <span class="logo-text">Milemark</span>
+    </a>
+
+    <a href="index.html" class="back-link">
+      <span>&larr;</span> Back to Home
+    </a>
+  </header>
+
+  <!-- AUTH WRAPPER -->
+  <div class="signup-wrapper">
+    <main class="signup-card">
+
+      <!-- TABS -->
+      <div class="auth-tabs" role="tablist">
+        <button type="button" class="tab-btn active" id="tabSignup" role="tab" aria-selected="true" onclick="switchTab('signup')">
+          Sign Up
+        </button>
+        <button type="button" class="tab-btn" id="tabLogin" role="tab" aria-selected="false" onclick="switchTab('login')">
+          Log In
+        </button>
+      </div>
+
+      <!-- HEADING -->
+      <div class="badge mono" id="formBadge">
+        <span class="badge-dot"></span>
+        <span id="badgeText">DRIVER REGISTRATION</span>
+      </div>
+
+      <h1 id="formTitle">Create Account</h1>
+      <p class="subtitle" id="formSubtitle">Join Milemark to book premium cars, SUVs, and bikes in seconds.</p>
+
+      <!-- SIGN UP FORM -->
+      <form id="signupForm" novalidate autocomplete="on">
+        <div class="form-grid">
+
+          <!-- First Name -->
+          <div class="field">
+            <label for="fname">First Name</label>
+            <div class="input-wrapper">
+              <input id="fname" name="fname" type="text"
+                     placeholder="e.g. Rahul"
+                     autocomplete="given-name" required>
+            </div>
+            <span class="error" id="fnameError"></span>
+          </div>
+
+          <!-- Last Name -->
+          <div class="field">
+            <label for="lname">Last Name</label>
+            <div class="input-wrapper">
+              <input id="lname" name="lname" type="text"
+                     placeholder="e.g. Sharma"
+                     autocomplete="family-name" required>
+            </div>
+            <span class="error" id="lnameError"></span>
+          </div>
+
+          <!-- Username -->
+          <div class="field full-width">
+            <label for="uname">Username</label>
+            <div class="input-wrapper">
+              <input id="uname" name="uname" type="text"
+                     placeholder="e.g. rahul_99 (letters, numbers, _)"
+                     autocomplete="username" required>
+            </div>
+            <span class="error" id="unameError"></span>
+          </div>
+
+          <!-- Date of Birth -->
+          <div class="field">
+            <label for="dob">Date of Birth</label>
+            <div class="input-wrapper">
+              <input id="dob" name="dob" type="date" required>
+            </div>
+            <span class="error" id="dobError"></span>
+          </div>
+
+          <!-- Mobile -->
+          <div class="field">
+            <label for="mobile">Mobile Number</label>
+            <div class="input-wrapper">
+              <input id="mobile" name="mobile" type="tel"
+                     inputmode="numeric" maxlength="10"
+                     placeholder="10 digits (6-9...)"
+                     autocomplete="tel" required>
+            </div>
+            <span class="error" id="mobileError"></span>
+          </div>
+
+          <!-- Postal Code -->
+          <div class="field">
+            <label for="postal">Postal Code</label>
+            <div class="input-wrapper">
+              <input id="postal" name="postal" type="text"
+                     inputmode="numeric" maxlength="6"
+                     placeholder="6 digits (e.g. 560001)"
+                     autocomplete="postal-code" required>
+            </div>
+            <span class="error" id="postalError"></span>
+          </div>
+
+          <!-- Email -->
+          <div class="field">
+            <label for="email">Email Address</label>
+            <div class="input-wrapper">
+              <input id="email" name="email" type="email"
+                     placeholder="name@example.com"
+                     autocomplete="email" required>
+            </div>
+            <span class="error" id="emailError"></span>
+          </div>
+
+          <!-- Password -->
+          <div class="field full-width">
+            <label for="pwd">Password</label>
+            <div class="input-wrapper">
+              <input id="pwd" name="pwd" type="password"
+                     placeholder="At least 8 chars, 1 uppercase, 1 special symbol"
+                     autocomplete="new-password" required>
+              <button type="button" class="toggle-pwd" id="togglePwdBtn" aria-label="Toggle password visibility">SHOW</button>
+            </div>
+            <div class="pwd-requirements">
+              <span class="req-pill" id="pillLength">8+ characters</span>
+              <span class="req-pill" id="pillUpper">1 Uppercase</span>
+              <span class="req-pill" id="pillSpecial">1 Special Symbol (@, #, !, etc.)</span>
+            </div>
+            <span class="error" id="pwdError"></span>
+          </div>
+
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-submit" id="submitBtn">
+            <span>Create Account & Continue</span>
+          </button>
+          <button type="button" class="btn-demo" id="fillDemoBtn">
+            ⚡ Quick Fill Valid Demo Data
+          </button>
+        </div>
+
+        <p class="switch-link">
+          Already have an account?
+          <a href="javascript:void(0)" onclick="switchTab('login')">Log In here</a>
+        </p>
+      </form>
+
+      <!-- LOG IN FORM -->
+      <form id="loginForm" novalidate autocomplete="on">
+        <div class="login-stack">
+
+          <!-- Identifier (Username or Email) -->
+          <div class="field">
+            <label for="loginId">Username or Email</label>
+            <div class="input-wrapper">
+              <input id="loginId" name="identifier" type="text"
+                     placeholder="Enter your username or email"
+                     autocomplete="username" required>
+            </div>
+            <span class="error" id="loginIdError"></span>
+          </div>
+
+          <!-- Password -->
+          <div class="field">
+            <label for="loginPwd">Password</label>
+            <div class="input-wrapper">
+              <input id="loginPwd" name="pwd" type="password"
+                     placeholder="Enter your password"
+                     autocomplete="current-password" required>
+              <button type="button" class="toggle-pwd" id="toggleLoginPwdBtn" aria-label="Toggle password visibility">SHOW</button>
+            </div>
+            <span class="error" id="loginPwdError"></span>
+          </div>
+
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-submit" id="loginSubmitBtn">
+            <span>Log In & Continue</span>
+          </button>
+          <button type="button" class="btn-demo" id="fillLastUserBtn">
+            ⚡ Fill Last Registered User
+          </button>
+        </div>
+
+        <p class="switch-link">
+          Don't have an account yet?
+          <a href="javascript:void(0)" onclick="switchTab('signup')">Sign Up here</a>
+        </p>
+      </form>
+
+      <!-- NOTIFICATION / STATUS BOX -->
+      <div id="message" role="status" aria-live="polite"></div>
+
+    </main>
+  </div>
+
+  <script>
+    // Exact validation rules and messages requested
+    const rules = {
+      fname: [/^[A-Za-z]{3,}$/, "Invalid First Name"],
+      lname: [/^[A-Za-z]{3,}$/, "Invalid Last Name"],
+      uname: [/^[A-Za-z0-9_]{5,}$/, "Invalid Username"],
+      dob: [/^\d{4}-\d{2}-\d{2}$/, "Select DOB"],
+      pwd: [/^(?=.*[A-Z])(?=.*\W).{8,}$/, "Invalid Password"],
+      mobile: [/^[6-9][0-9]{9}$/, "Invalid Mobile"],
+      postal: [/^[0-9]{6}$/, "Invalid Postal Code"],
+      email: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid Email"]
+    };
+
+    // Elements
+    const signupForm = document.getElementById("signupForm");
+    const loginForm = document.getElementById("loginForm");
+    const tabSignup = document.getElementById("tabSignup");
+    const tabLogin = document.getElementById("tabLogin");
+    const badgeText = document.getElementById("badgeText");
+    const formTitle = document.getElementById("formTitle");
+    const formSubtitle = document.getElementById("formSubtitle");
+    const message = document.getElementById("message");
+
+    const submitBtn = document.getElementById("submitBtn");
+    const loginSubmitBtn = document.getElementById("loginSubmitBtn");
+    const fillDemoBtn = document.getElementById("fillDemoBtn");
+    const fillLastUserBtn = document.getElementById("fillLastUserBtn");
+
+    const pwdInput = document.getElementById("pwd");
+    const togglePwdBtn = document.getElementById("togglePwdBtn");
+    const loginPwdInput = document.getElementById("loginPwd");
+    const toggleLoginPwdBtn = document.getElementById("toggleLoginPwdBtn");
+
+    // TAB SWITCHING
+    function switchTab(mode) {
+      message.className = "";
+      message.style.display = "none";
+      message.textContent = "";
+
+      if (mode === "login") {
+        tabLogin.classList.add("active");
+        tabLogin.setAttribute("aria-selected", "true");
+        tabSignup.classList.remove("active");
+        tabSignup.setAttribute("aria-selected", "false");
+
+        signupForm.style.display = "none";
+        loginForm.style.display = "block";
+
+        badgeText.textContent = "DRIVER ACCESS";
+        formTitle.textContent = "Welcome Back";
+        formSubtitle.textContent = "Enter your credentials to access your vehicle bookings.";
+
+        window.location.hash = "login";
+        document.getElementById("loginId").focus();
+      } else {
+        tabSignup.classList.add("active");
+        tabSignup.setAttribute("aria-selected", "true");
+        tabLogin.classList.remove("active");
+        tabLogin.setAttribute("aria-selected", "false");
+
+        loginForm.style.display = "none";
+        signupForm.style.display = "block";
+
+        badgeText.textContent = "DRIVER REGISTRATION";
+        formTitle.textContent = "Create Account";
+        formSubtitle.textContent = "Join Milemark to book premium cars, SUVs, and bikes in seconds.";
+
+        window.location.hash = "signup";
+        document.getElementById("fname").focus();
+      }
+    }
+
+    // Read URL hash on load to open appropriate tab
+    window.addEventListener("DOMContentLoaded", () => {
+      const hash = window.location.hash.toLowerCase();
+      const params = new URLSearchParams(window.location.search);
+      if (hash === "#login" || params.get("mode") === "login") {
+        switchTab("login");
+      }
+    });
+
+    // Password visibility toggles
+    togglePwdBtn.addEventListener("click", () => {
+      const isPwd = pwdInput.type === "password";
+      pwdInput.type = isPwd ? "text" : "password";
+      togglePwdBtn.textContent = isPwd ? "HIDE" : "SHOW";
+    });
+
+    toggleLoginPwdBtn.addEventListener("click", () => {
+      const isPwd = loginPwdInput.type === "password";
+      loginPwdInput.type = isPwd ? "text" : "password";
+      toggleLoginPwdBtn.textContent = isPwd ? "HIDE" : "SHOW";
+    });
+
+    // Password requirement helpers
+    function updatePasswordPills(val) {
+      document.getElementById("pillLength").classList.toggle("met", val.length >= 8);
+      document.getElementById("pillUpper").classList.toggle("met", /[A-Z]/.test(val));
+      document.getElementById("pillSpecial").classList.toggle("met", /\W/.test(val));
+    }
+
+    // Validate a single sign-up field by name
+    function validateField(name) {
+      const input = document.getElementById(name);
+      const error = document.getElementById(name + "Error");
+      const [pattern, errorMessage] = rules[name];
+      const value = input.value.trim();
+
+      let valid = pattern.test(value);
+
+      // Additional real past date check for DOB
+      if (name === "dob" && valid) {
+        const parts = value.split("-");
+        const y = parseInt(parts[0], 10);
+        const m = parseInt(parts[1], 10) - 1;
+        const d = parseInt(parts[2], 10);
+        const date = new Date(y, m, d);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        valid = (
+          date.getFullYear() === y &&
+          date.getMonth() === m &&
+          date.getDate() === d &&
+          date < today
+        );
+      }
+
+      if (name === "pwd") {
+        updatePasswordPills(input.value);
+      }
+
+      input.classList.toggle("invalid", !valid);
+      input.classList.toggle("valid", valid && value.length > 0);
+      input.setAttribute("aria-invalid", String(!valid));
+      error.textContent = valid ? "" : errorMessage;
+
+      return valid;
+    }
+
+    // Attach real-time validation listeners to signup fields
+    Object.keys(rules).forEach(name => {
+      const input = document.getElementById(name);
+
+      input.addEventListener("input", () => {
+        validateField(name);
+        if (message.classList.contains("error-box")) {
+          message.style.display = "none";
+        }
+      });
+
+      input.addEventListener("change", () => {
+        validateField(name);
+      });
+    });
+
+    // Auto-fill valid demo data for quick testing/evaluation
+    fillDemoBtn.addEventListener("click", () => {
+      const randomSuffix = Math.floor(1000 + Math.random() * 9000);
+      document.getElementById("fname").value = "Rahul";
+      document.getElementById("lname").value = "Sharma";
+      document.getElementById("uname").value = "rahul_" + randomSuffix;
+      document.getElementById("dob").value = "1998-05-15";
+      document.getElementById("mobile").value = "9876543210";
+      document.getElementById("postal").value = "560001";
+      document.getElementById("email").value = "rahul." + randomSuffix + "@example.com";
+      document.getElementById("pwd").value = "DriveFast#2026";
+
+      Object.keys(rules).forEach(validateField);
+      message.style.display = "none";
+    });
+
+    // Auto-fill last registered or demo user in login form
+    fillLastUserBtn.addEventListener("click", () => {
+      const lastUserJson = localStorage.getItem("lastRegisteredUser");
+      if (lastUserJson) {
+        try {
+          const lastUser = JSON.parse(lastUserJson);
+          document.getElementById("loginId").value = lastUser.uname || lastUser.email || "";
+          document.getElementById("loginPwd").value = lastUser.pwd || "";
+          message.style.display = "none";
+          return;
+        } catch(e) {}
+      }
+      // Fallback demo user
+      document.getElementById("loginId").value = "ajith7718";
+      document.getElementById("loginPwd").value = "DriveFast#2026";
+      message.style.display = "none";
+    });
+
+    // SIGN UP SUBMISSION -> AUTO LOGS IN AND REDIRECTS TO HOME PAGE
+    signupForm.addEventListener("submit", async event => {
+      event.preventDefault();
+      message.className = "";
+      message.style.display = "none";
+      message.textContent = "";
+
+      const names = Object.keys(rules);
+      const results = names.map(validateField);
+
+      if (results.includes(false)) {
+        message.className = "error-box";
+        message.textContent = "Please resolve the highlighted errors above.";
+        const firstInvalid = document.querySelector("#signupForm .invalid");
+        if (firstInvalid) firstInvalid.focus();
+        return;
+      }
+
+      const payload = Object.fromEntries(
+        names.map(name => [
+          name,
+          document.getElementById(name).value.trim()
+        ])
+      );
+
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = "<span>Creating Account...</span>";
+
+      try {
+        const response = await fetch("/api/signup", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result.message || "Registration failed.");
+        }
+
+        // Cache registered credentials for convenient login demo
+        localStorage.setItem("lastRegisteredUser", JSON.stringify({
+          uname: payload.uname,
+          email: payload.email,
+          pwd: payload.pwd,
+          fname: payload.fname
+        }));
+
+        // Store active authenticated session in localStorage
+        const userSession = result.user || {
+          fname: payload.fname,
+          lname: payload.lname,
+          uname: payload.uname,
+          email: payload.email
+        };
+        localStorage.setItem("currentUser", JSON.stringify(userSession));
+
+        message.className = "success-box";
+        message.innerHTML = `
+          <strong>✓ Account Created Successfully!</strong><br>
+          Welcome, <strong>${userSession.fname || userSession.uname}</strong>!<br>
+          <div class="redirect-indicator">
+            <span class="spinner"></span>
+            Redirecting to home page in a moment...
+          </div>
+        `;
+
+        signupForm.reset();
+        document.querySelectorAll(".req-pill").forEach(p => p.classList.remove("met"));
+        names.forEach(name => {
+          const el = document.getElementById(name);
+          el.classList.remove("valid", "invalid");
+          el.setAttribute("aria-invalid", "false");
+          document.getElementById(name + "Error").textContent = "";
+        });
+
+        // Redirect to Home Page after 1.2 seconds
+        setTimeout(() => {
+          window.location.href = "index.html";
+        }, 1200);
+
+      } catch (err) {
+        message.className = "error-box";
+        message.textContent = err.message || "Unable to reach server. Please try again.";
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = "<span>Create Account & Continue</span>";
+      }
+    });
+
+    // LOG IN SUBMISSION -> REDIRECTS TO HOME PAGE
+    loginForm.addEventListener("submit", async event => {
+      event.preventDefault();
+      message.className = "";
+      message.style.display = "none";
+      message.textContent = "";
+
+      const identifierInput = document.getElementById("loginId");
+      const pwdInput = document.getElementById("loginPwd");
+      const idError = document.getElementById("loginIdError");
+      const pwdError = document.getElementById("loginPwdError");
+
+      idError.textContent = "";
+      pwdError.textContent = "";
+      identifierInput.classList.remove("invalid");
+      pwdInput.classList.remove("invalid");
+
+      const identifier = identifierInput.value.trim();
+      const pwd = pwdInput.value;
+
+      let hasError = false;
+      if (!identifier) {
+        idError.textContent = "Please enter your username or email";
+        identifierInput.classList.add("invalid");
+        hasError = true;
+      }
+      if (!pwd) {
+        pwdError.textContent = "Please enter your password";
+        pwdInput.classList.add("invalid");
+        hasError = true;
+      }
+
+      if (hasError) return;
+
+      loginSubmitBtn.disabled = true;
+      loginSubmitBtn.innerHTML = "<span>Logging In...</span>";
+
+      try {
+        const response = await fetch("/api/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ identifier, pwd })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result.message || "Invalid username/email or password.");
+        }
+
+        // Store active session in localStorage
+        const userSession = result.user || { uname: identifier };
+        localStorage.setItem("currentUser", JSON.stringify(userSession));
+
+        message.className = "success-box";
+        message.innerHTML = `
+          <strong>✓ Login Successful!</strong><br>
+          Welcome back, <strong>${userSession.fname || userSession.uname}</strong>!<br>
+          <div class="redirect-indicator">
+            <span class="spinner"></span>
+            Redirecting to home page in a moment...
+          </div>
+        `;
+
+        // Redirect to Home Page after 1.2 seconds
+        setTimeout(() => {
+          window.location.href = "index.html";
+        }, 1200);
+
+      } catch (err) {
+        message.className = "error-box";
+        message.textContent = err.message || "Invalid username/email or password.";
+        loginSubmitBtn.disabled = false;
+        loginSubmitBtn.innerHTML = "<span>Log In & Continue</span>";
+      }
+    });
+  </script>
+</body>
+</html>

@@ -695,24 +695,18 @@ app.post("/api/seed", async (req, res) => {
     }
 });
 
-// ===============================
-// START SERVER AFTER DATABASE CONNECTS
-// ===============================
 
-async function startServer() {
-    try {
-        await connectDatabase();
+ // ===============================
+ // START SERVER FOR RENDER
+ // ===============================
 
-        app.listen(PORT, "0.0.0.0", () => {
-            console.log("===============================================");
-            console.log("Milemark Vehicle Rental Server running");
-            console.log(`Listening on port ${PORT}`);
-            console.log("===============================================");
-        });
-    } catch (error) {
-        console.error("Failed to start server:", error.message);
-        process.exit(1);
-    }
-}
+app.listen(PORT, "0.0.0.0", () => {
+    console.log("===============================================");
+    console.log("Milemark Vehicle Rental Server running");
+    console.log(`Listening on port ${PORT}`);
+    console.log("===============================================");
 
-startServer();
+    connectDatabase().catch((error) => {
+        console.error("MongoDB Atlas connection failed:", error.message);
+    });
+});

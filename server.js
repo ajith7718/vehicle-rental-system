@@ -16,14 +16,6 @@ const scryptAsync = promisify(crypto.scrypt);
 app.use(express.json({ limit: "20kb" }));
 app.use(express.static(path.join(__dirname, "public")));
 
-app.get("/signup", (req, res) => {
-    res.sendFile(path.join(__dirname, "public", "signup.html"));
-});
-
-app.get("/login", (req, res) => {
-    res.redirect("/signup.html#login");
-});
-
 app.use((req, res, next) => {
     console.log(
         `[LOG] ${new Date().toLocaleTimeString()} - ${req.method} ${req.url}`
@@ -32,18 +24,26 @@ app.use((req, res, next) => {
 });
 
 // ===============================
-// MONGODB CONNECTION
+// MONGODB ATLAS CONNECTION
 // ===============================
 
-mongoose
-    .connect(
-        process.env.MONGODB_URI ||
-        "mongodb://localhost:27017/milemark"
-    )
-    .then(() => console.log("MongoDB connected successfully"))
-    .catch((error) =>
-        console.log("MongoDB connection error:", error.message)
-    );
+const MONGODB_URI = process.env.MONGODB_URI;
+
+async function connectDatabase() {
+    if (!MONGODB_URI) {
+        throw new Error(
+            "MONGODB_URI is missing. Set it in Render Environment Variables."
+        );
+    }
+
+    await mongoose.connect(MONGODB_URI, {
+        dbName: "milemark",
+        serverSelectionTimeoutMS: 15000
+    });
+
+    console.log("MongoDB Atlas connected successfully");
+    console.log("Database:", mongoose.connection.name);
+}
 
 // ===============================
 // USER SIGNUP SCHEMA
@@ -103,21 +103,29 @@ const User = mongoose.model("User", userSchema);
 // ===============================
 
 const signupRules = {
-    fname: [/^[A-Za-z]{3,}$/, "Invalid First Name"],
-    lname: [/^[A-Za-z]{3,}$/, "Invalid Last Name"],
-    uname: [/^[A-Za-z0-9_]{5,}$/, "Invalid Username"],
-    dob: [/^\d{4}-\d{2}-\d{2}$/, "Select DOB"],
-    pwd: [/^(?=.*[A-Z])(?=.*\W).{8,}$/, "Invalid Password"],
-    mobile: [/^[6-9][0-9]{9}$/, "Invalid Mobile"],
-    postal: [/^[0-9]{6}$/, "Invalid Postal Code"],
-    email: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid Email"]
+    fname: /^[A-Za-z]{3,}$/,
+    lname: /^[A-Za-z]{3,}$/,
+    uname: /^[A-Za-z0-9_]{5,}$/,
+    dob: /^\d{4}-\d{2}-\d{2}$/,
+    pwd: /^(?=.*[A-Z])(?=.*\W).{8,}$/,
+    mobile: /^[6-9][0-9]{9}$/,
+    postal: /^[0-9]{6}$/,
+    email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 };
 
-// In-memory user store fallback when MongoDB is not running locally
-const inMemoryUsers = [];
+const signupMessages = {
+    fname: "Invalid First Name",
+    lname: "Invalid Last Name",
+    uname: "Invalid Username",
+    dob: "Select DOB",
+    pwd: "Invalid Password",
+    mobile: "Invalid Mobile",
+    postal: "Invalid Postal Code",
+    email: "Invalid Email"
+};
 
 function isValidPastDate(dateString) {
-    if (!signupRules.dob[0].test(dateString)) {
+    if (!signupRules.dob.test(dateString)) {
         return false;
     }
 
@@ -144,21 +152,6 @@ async function hashPassword(password) {
     const derivedKey = await scryptAsync(password, salt, 64);
 
     return `${salt}:${derivedKey.toString("hex")}`;
-}
-
-async function verifyPassword(password, storedHash) {
-    try {
-        if (!storedHash || typeof storedHash !== "string") return false;
-        const [salt, key] = storedHash.split(":");
-        if (!salt || !key) return false;
-        const derivedKey = await scryptAsync(password, salt, 64);
-        return crypto.timingSafeEqual(
-            Buffer.from(key, "hex"),
-            derivedKey
-        );
-    } catch (e) {
-        return false;
-    }
 }
 
 // ===============================
@@ -190,13 +183,12 @@ app.post("/api/signup", async (req, res) => {
             email: typeof email === "string" ? email.trim() : ""
         };
 
-        // Validate every required field with defined regex and error message
-        for (const [field, [pattern, errorMessage]] of Object.entries(signupRules)) {
-            if (!pattern.test(data[field])) {
+        // Validate every required field.
+        for (const field of Object.keys(signupRules)) {
+            if (!signupRules[field].test(data[field])) {
                 return res.status(400).json({
                     success: false,
-                    field,
-                    message: errorMessage
+                    message: signupMessages[field]
                 });
             }
         }
@@ -205,8 +197,7 @@ app.post("/api/signup", async (req, res) => {
         if (!isValidPastDate(data.dob)) {
             return res.status(400).json({
                 success: false,
-                field: "dob",
-                message: "Select DOB"
+                message: "Select a valid date of birth in the past"
             });
         }
 
@@ -214,82 +205,40 @@ app.post("/api/signup", async (req, res) => {
         data.uname = data.uname.toLowerCase();
         data.email = data.email.toLowerCase();
 
-        // 1. If MongoDB is connected, save into MongoDB
-        if (mongoose.connection.readyState === 1) {
-            const existingUser = await User.findOne({
-                $or: [
-                    { uname: data.uname },
-                    { email: data.email }
-                ]
-            });
-
-            if (existingUser) {
-                if (existingUser.uname === data.uname) {
-                    return res.status(409).json({
-                        success: false,
-                        field: "uname",
-                        message: "Username already exists"
-                    });
-                }
-
-                return res.status(409).json({
-                    success: false,
-                    field: "email",
-                    message: "Email already registered"
-                });
-            }
-
-            const hashedPassword = await hashPassword(data.pwd);
-
-            const newUser = await User.create({
-                fname: data.fname,
-                lname: data.lname,
-                uname: data.uname,
-                dob: data.dob,
-                pwd: hashedPassword,
-                mobile: data.mobile,
-                postal: data.postal,
-                email: data.email
-            });
-
-            console.log("[MongoDB] New user registered:", newUser.uname);
-
-            return res.status(201).json({
-                success: true,
-                message: "Account created successfully!",
-                user: {
-                    id: newUser._id,
-                    fname: newUser.fname,
-                    lname: newUser.lname,
-                    uname: newUser.uname,
-                    email: newUser.email
-                }
+        // Make sure MongoDB is connected.
+        if (mongoose.connection.readyState !== 1) {
+            return res.status(503).json({
+                success: false,
+                message: "Database is not connected. Please try again later."
             });
         }
 
-        // 2. In-Memory fallback (when local MongoDB daemon is not running)
-        const duplicate = inMemoryUsers.find(
-            (u) => u.uname === data.uname || u.email === data.email
-        );
+        // Check whether the username or email already exists.
+        const existingUser = await User.findOne({
+            $or: [
+                { uname: data.uname },
+                { email: data.email }
+            ]
+        });
 
-        if (duplicate) {
-            if (duplicate.uname === data.uname) {
+        if (existingUser) {
+            if (existingUser.uname === data.uname) {
                 return res.status(409).json({
                     success: false,
-                    field: "uname",
                     message: "Username already exists"
                 });
             }
+
             return res.status(409).json({
                 success: false,
-                field: "email",
                 message: "Email already registered"
             });
         }
 
+        // Hash the password before saving it.
         const hashedPassword = await hashPassword(data.pwd);
-        const newUser = {
-            id: "user_" + Date.now(),
+
+        const newUser = await User.create({
             fname: data.fname,
             lname: data.lname,
             uname: data.uname,
@@ -297,18 +246,16 @@ app.post("/api/signup", async (req, res) => {
             pwd: hashedPassword,
             mobile: data.mobile,
             postal: data.postal,
-            email: data.email,
-            createdAt: new Date().toISOString()
-        };
+            email: data.email
+        });
 
-        inMemoryUsers.push(newUser);
-        console.log("[In-Memory Store] New user registered:", newUser.uname);
+        console.log("New user registered:", newUser.uname);
 
         return res.status(201).json({
             success: true,
             message: "Account created successfully!",
             user: {
-                id: newUser.id,
+                id: newUser._id,
                 fname: newUser.fname,
                 lname: newUser.lname,
                 uname: newUser.uname,
@@ -325,7 +272,6 @@ app.post("/api/signup", async (req, res) => {
 
             return res.status(409).json({
                 success: false,
-                field: duplicateField,
                 message:
                     duplicateField === "uname"
                         ? "Username already exists"
@@ -337,116 +283,6 @@ app.post("/api/signup", async (req, res) => {
             success: false,
             message: "Unable to create account. Please try again."
         });
-    }
-});
-
-// ===============================
-// LOGIN API
-// POST /api/login
-// ===============================
-
-app.post("/api/login", async (req, res) => {
-    try {
-        const { identifier, pwd } = req.body || {};
-
-        if (!identifier || !pwd) {
-            return res.status(400).json({
-                success: false,
-                message: "Please enter your username/email and password."
-            });
-        }
-
-        const id = identifier.trim().toLowerCase();
-
-        // 1. If MongoDB is connected
-        if (mongoose.connection.readyState === 1) {
-            const user = await User.findOne({
-                $or: [{ uname: id }, { email: id }]
-            }).select("+pwd");
-
-            if (!user) {
-                return res.status(401).json({
-                    success: false,
-                    message: "Invalid username/email or password."
-                });
-            }
-
-            const isMatch = await verifyPassword(pwd, user.pwd);
-            if (!isMatch) {
-                return res.status(401).json({
-                    success: false,
-                    message: "Invalid username/email or password."
-                });
-            }
-
-            console.log("[MongoDB] User logged in:", user.uname);
-
-            return res.json({
-                success: true,
-                message: "Login successful!",
-                user: {
-                    id: user._id,
-                    fname: user.fname,
-                    lname: user.lname,
-                    uname: user.uname,
-                    email: user.email
-                }
-            });
-        }
-
-        // 2. In-Memory fallback
-        const user = inMemoryUsers.find(
-            (u) => u.uname.toLowerCase() === id || u.email.toLowerCase() === id
-        );
-
-        if (!user) {
-            return res.status(401).json({
-                success: false,
-                message: "Invalid username/email or password."
-            });
-        }
-
-        const isMatch = await verifyPassword(pwd, user.pwd);
-        if (!isMatch) {
-            return res.status(401).json({
-                success: false,
-                message: "Invalid username/email or password."
-            });
-        }
-
-        console.log("[In-Memory] User logged in:", user.uname);
-
-        return res.json({
-            success: true,
-            message: "Login successful!",
-            user: {
-                id: user.id,
-                fname: user.fname,
-                lname: user.lname,
-                uname: user.uname,
-                email: user.email
-            }
-        });
-    } catch (error) {
-        console.error("Login error:", error);
-        return res.status(500).json({
-            success: false,
-            message: "Unable to process login. Please try again."
-        });
-    }
-});
-
-// GET /api/users (Inspect registered users without passwords)
-app.get("/api/users", async (req, res) => {
-    try {
-        if (mongoose.connection.readyState === 1) {
-            const users = await User.find({}, "-pwd");
-            return res.json({ count: users.length, users });
-        }
-        const users = inMemoryUsers.map(({ pwd, ...safe }) => safe);
-        return res.json({ count: users.length, users, storage: "in-memory" });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
     }
 });
 
@@ -860,12 +696,23 @@ app.post("/api/seed", async (req, res) => {
 });
 
 // ===============================
-// START SERVER
+// START SERVER AFTER DATABASE CONNECTS
 // ===============================
 
-app.listen(PORT, () => {
-    console.log("===============================================");
-    console.log("Milemark Vehicle Rental Server running");
-    console.log(`Webpage: http://localhost:${PORT}`);
-    console.log("===============================================");
-});
+async function startServer() {
+    try {
+        await connectDatabase();
+
+        app.listen(PORT, "0.0.0.0", () => {
+            console.log("===============================================");
+            console.log("Milemark Vehicle Rental Server running");
+            console.log(`Listening on port ${PORT}`);
+            console.log("===============================================");
+        });
+    } catch (error) {
+        console.error("Failed to start server:", error.message);
+        process.exit(1);
+    }
+}
+
+startServer();
